@@ -1,28 +1,17 @@
-# Web framework + CORS
 flask
 flask-cors
 werkzeug
+gunicorn
 
-# Frontend
-streamlit
-requests
-
-# Adatbázis kapcsolat
 psycopg2-binary
 
-# OpenAI API
 openai
-
-# Rerank (cross-encoder)
 sentence-transformers
 
-# Dokumentum feldolgozás
 unstructured
 unstructured[pdf,docx]
-
-# PDF/Docx feldolgozás függőségei
 pypdf
 python-docx
 
-# (opcionális) környezeti változókhoz
 python-dotenv
+requests

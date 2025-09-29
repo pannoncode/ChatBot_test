@@ -3,8 +3,7 @@ import psycopg2
 from psycopg2.extras import execute_values, Json
 
 
-PG_DSN = os.getenv(
-    "PG_DSN", "postgresql://postgres:postgres@localhost:5432/ragdb")
+PG_DSN = os.getenv("DATABASE_URL")
 
 
 def get_conn():

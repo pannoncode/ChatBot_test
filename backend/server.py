@@ -4,17 +4,6 @@ from flask_cors import CORS
 from flask import Response, stream_with_context
 from werkzeug.utils import secure_filename
 
-from app.file_checker import file_checker
-from app.chunker import file_type_separator_chunk_gen
-from app.embedder import document_embeddings, gen_openai_embeddings
-from app.rerank import rerank_with_cross_encoder
-from app.model import openai_model, openai_model_stream
-
-from db.db import upload_chunks_embed
-from db.db_search import search_similar
-
-
-
 
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -33,6 +22,10 @@ def health():
 
 @app.post("/upload")
 def upload_embed_file():
+    from app.file_checker import file_checker
+    from app.chunker import file_type_separator_chunk_gen
+    from app.embedder import document_embeddings
+    from db.db import upload_chunks_embed
     if "file" not in request.files:
         return jsonify({"error": "Nincs fájl a kérésben"}), 400
 
@@ -89,6 +82,9 @@ def upload_embed_file():
 
 @app.post("/search")
 def search():
+    from app.embedder import gen_openai_embeddings
+    from db.db_search import search_similar
+    from app.rerank import rerank_with_cross_encoder
     """Csak teszteléshez"""
     data = request.get_json(silent=True) or {}
     user_query = data.get("user_query").strip()
@@ -120,6 +116,10 @@ def search():
 
 @app.post("/answer")
 def answer():
+    from app.embedder import gen_openai_embeddings
+    from db.db_search import search_similar
+    from app.rerank import rerank_with_cross_encoder
+    from app.model import openai_model
     data = request.get_json(silent=True) or {}
     user_query = data.get("user_query").strip()
     print(user_query)
@@ -178,6 +178,9 @@ def answer():
 
 @app.post("/answer_stream")
 def answer_stream():
+    from app.embedder import gen_openai_embeddings
+    from app.rerank import rerank_with_cross_encoder
+    from db.db_search import search_similar
     data = request.get_json(silent=True) or {}
     user_query = data.get("user_query").strip()
     if not user_query:
@@ -219,6 +222,7 @@ def answer_stream():
     ]
 
     def sse():
+        from app.model import openai_model_stream
         """Teljes AI segítséggel"""
         yield f"event: meta\ndata: {{\"retrieved\": {len(docs)}, \"top_k\": {top_k}}}\n\n"
 

@@ -68,7 +68,7 @@ if view == "Chat":
 
         query = {"user_query": prompt, "top_k": 5}
         # resp = requests.post(f"{BACKEND_URL}/search", json=query, timeout=30)
-        resp = requests.post(f"{BACKEND_URL}/answer", json=query, timeout=120)
+        resp = requests.post(f"{BACKEND_URL}/answer", json=query, timeout=(10,300))
 
         data = resp.json()
 
@@ -98,7 +98,7 @@ if view == "Chat stream":
             try:
                 payload = {"user_query": prompt, "top_k": 5}
                 with requests.post(f"{BACKEND_URL}/answer_stream",
-                                   json=payload, stream=True, timeout=300) as resp:
+                                   json=payload, stream=True, timeout=(10,300)) as resp:
                     if resp.status_code != 200:
                         st.error(f"Hiba: {resp.status_code} {resp.text}")
                     else:

@@ -15,3 +15,5 @@ python-docx
 
 python-dotenv
 requests
+
+markdown
